@@ -1,0 +1,314 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { 
+  Briefcase, 
+  Trophy, 
+  Users, 
+  TrendingUp, 
+  Code, 
+  Zap, 
+  Target,
+  Star,
+  Calendar,
+  Building
+} from 'lucide-react';
+
+const experienceData = [
+  {
+    id: 1,
+    role: 'Senior Software Engineer',
+    company: 'Tech Innovators Inc.',
+    duration: '2021 - Present',
+    location: 'San Francisco, CA',
+    type: 'Full-time',
+    achievements: [
+      'Led cross-functional team of 8 developers in microservices architecture',
+      'Boosted system performance by 40% through strategic optimization',
+      'Mentored 5 junior developers, increasing team productivity by 30%',
+      'Architected cloud-native solutions serving 1M+ users daily'
+    ],
+    skills: ['React', 'Node.js', 'AWS', 'Kubernetes', 'TypeScript'],
+    icon: <Code className="w-5 h-5" />,
+    color: 'from-blue-500 to-cyan-400',
+    bgColor: 'from-blue-500/10 to-cyan-400/10',
+    borderColor: 'border-blue-500/30',
+  },
+  {
+    id: 2,
+    role: 'Software Engineer',
+    company: 'Digital Solutions Ltd.',
+    duration: '2018 - 2021',
+    location: 'Austin, TX',
+    type: 'Full-time',
+    achievements: [
+      'Launched 3 major features reaching 50k+ active users',
+      'Reduced API response time by 60% via database optimization',
+      'Implemented CI/CD pipeline cutting deployment time by 70%',
+      'Collaborated with cross-functional teams on agile development'
+    ],
+    skills: ['Python', 'Django', 'PostgreSQL', 'Docker', 'Jenkins'],
+    icon: <Zap className="w-5 h-5" />,
+    color: 'from-purple-500 to-pink-400',
+    bgColor: 'from-purple-500/10 to-pink-400/10',
+    borderColor: 'border-purple-500/30',
+  },
+  {
+    id: 3,
+    role: 'Junior Developer',
+    company: 'WebCraft Studios',
+    duration: '2016 - 2018',
+    location: 'Denver, CO',
+    type: 'Full-time',
+    achievements: [
+      'Built responsive web applications with modern frameworks',
+      'Collaborated with UI/UX team for pixel-perfect implementations',
+      'Optimized page load times by 45% through performance tuning',
+      'Contributed to open-source projects and internal tooling'
+    ],
+    skills: ['JavaScript', 'Vue.js', 'SASS', 'Git', 'Webpack'],
+    icon: <Target className="w-5 h-5" />,
+    color: 'from-emerald-500 to-teal-400',
+    bgColor: 'from-emerald-500/10 to-teal-400/10',
+    borderColor: 'border-emerald-500/30',
+  },
+];
+
+const stats = [
+  { value: '7+', label: 'Years Experience', icon: Calendar, color: 'text-blue-400' },
+  { value: '50+', label: 'Projects Delivered', icon: Trophy, color: 'text-purple-400' },
+  { value: '100k+', label: 'Users Impacted', icon: Users, color: 'text-pink-400' },
+  { value: '98%', label: 'Client Satisfaction', icon: Star, color: 'text-yellow-400' },
+];
+
+const ModernExperienceSection = () => {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+  const [activeCard, setActiveCard] = useState(0);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const scaleProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+
+  return (
+    <section 
+      ref={containerRef}
+      className="relative min-h-screen py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-gray-900 to-black overflow-hidden"
+    >
+      {/* Animated Background Elements */}
+      <motion.div 
+        style={{ y: backgroundY }}
+        className="absolute inset-0 opacity-30"
+      >
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
+      </motion.div>
+
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-40" style={{
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'1\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+      }} />
+
+      <div className="relative max-w-7xl mx-auto">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <span className="inline-block px-4 py-1 text-sm font-medium text-purple-400 bg-purple-900/30 rounded-full mb-4">Professional Journey</span>
+          
+          <h2 className="text-5xl md:text-7xl font-bold mb-6">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-purple-300">
+              Experience
+            </span>
+            <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+              That Delivers
+            </span>
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"/>
+          
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mt-8">
+            Transforming ideas into impactful solutions through strategic development 
+            and innovative problem-solving
+          </p>
+        </motion.div>
+
+        {/* Experience Timeline */}
+        <motion.div 
+          style={{ scale: scaleProgress }}
+          className="relative mb-24"
+        >
+          <div className="grid gap-8 lg:gap-12">
+            {experienceData.map((exp, index) => (
+              <motion.div
+                key={exp.id}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+                onHoverStart={() => setActiveCard(index)}
+                className="relative"
+              >
+                <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-12">
+                  {/* Timeline Connector - Left Side */}
+                  <div className="hidden lg:flex flex-col items-center w-24 flex-shrink-0">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${exp.color} flex items-center justify-center shadow-lg z-10`}
+                    >
+                      <div className="text-white">
+                        {exp.icon}
+                      </div>
+                    </motion.div>
+                    {index < experienceData.length - 0 && (
+                      <div className="w-1 h-24 mt-4 bg-gradient-to-b from-gray-600/50 to-transparent" />
+                    )}
+                  </div>
+
+                  {/* Content Card */}
+                  <motion.div
+                    whileHover={{ y: -3 }}
+                    className="relative group w-full"
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${exp.bgColor} rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    
+                    <div className="relative p-8 bg-gray-900/60 backdrop-blur-xl rounded-3xl border border-gray-800/50 hover:border-gray-700/50 transition-all duration-300">
+                      {/* Company Badge */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2.5 rounded-xl bg-gradient-to-br ${exp.color} shadow-md`}>
+                            <Building className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold text-white">{exp.role}</h3>
+                            <p className={`text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r ${exp.color}`}>
+                              {exp.company}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="sm:text-right">
+                          <p className="text-sm font-medium text-gray-300">{exp.duration}</p>
+                          <p className="text-xs text-gray-400">{exp.location}</p>
+                          <span className="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-800/50 text-gray-300">
+                            {exp.type}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Achievements */}
+                      <div className="mb-6">
+                        <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-green-400" />
+                          Key Impact & Achievements
+                        </h4>
+                        <div className="grid md:grid-cols-2 gap-3">
+                          {exp.achievements.map((achievement, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={isInView ? { opacity: 1, y: 0 } : {}}
+                              transition={{ 
+                                delay: index * 0.15 + i * 0.08,
+                                type: 'spring',
+                                stiffness: 100
+                              }}
+                              className="flex items-start gap-3 p-4 rounded-xl bg-gray-800/40 hover:bg-gray-800/60 transition-all duration-300 border border-gray-800/50 hover:border-gray-700/50"
+                            >
+                              <div className={`w-2 h-2 mt-1.5 rounded-full bg-gradient-to-r ${exp.color} flex-shrink-0`} />
+                              <p className="text-gray-200 text-sm leading-relaxed">{achievement}</p>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Skills Tags */}
+                      <div className="mt-6 pt-5 border-t border-gray-800/50">
+                        <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                          <span>Technologies Used</span>
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {exp.skills.map((skill, i) => (
+                            <motion.span
+                              key={i}
+                              initial={{ opacity: 0, y: 5 }}
+                              animate={isInView ? { opacity: 1, y: 0 } : {}}
+                              transition={{ 
+                                delay: index * 0.15 + i * 0.05,
+                                type: 'spring',
+                                stiffness: 100
+                              }}
+                              className={`px-3 py-1.5 text-xs font-medium rounded-full bg-gray-800/60 border ${exp.borderColor} hover:bg-gray-800/80 transition-all duration-300`}
+                            >
+                              {skill}
+                            </motion.span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stats Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="relative p-6 bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-gray-800/50 hover:border-gray-700/50 transition-all duration-300 text-center">
+                <div className="mb-4">
+                  <stat.icon className={`w-8 h-8 mx-auto ${stat.color}`} />
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
+                <p className="text-gray-400 text-sm">{stat.label}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center mt-20"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <span>Let's Discuss Your Next Project</span>
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.div>
+          </motion.button>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default ModernExperienceSection;
