@@ -113,10 +113,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
-- GitHub: [@your-username](https://github.com/your-username)
+- Email: ranjitkairi@gmail.com
+- LinkedIn: [Ranjit Kairi](https://linkedin.com/in/ranjit-kairi)
+- GitHub: [@ranjitkairi](https://github.com/ranjitkairi)
 
 ---
 
-Made with ❤️ by [Your Name] - Feel free to use this template!
+Made with ❤️ by [Ranjit Kairi](https://github.com/ranjitkairi) (Self) - Feel free to use this template!
