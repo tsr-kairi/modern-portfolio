@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
 
 import Navigation from './Navigation';
 import HeroSection from './HeroSection';

@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { 
-  Briefcase, 
   Trophy, 
   Users, 
-  TrendingUp, 
   Code, 
-  Zap, 
+  Calendar,
+  Building,
+  Zap,
   Target,
   Star,
-  Calendar,
-  Building
+  TrendingUp
 } from 'lucide-react';
 
 const experienceData = [
@@ -83,12 +82,16 @@ const stats = [
 const ModernExperienceSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.2 });
-  const [activeCard, setActiveCard] = useState(0);
-  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
+  
+  // Uncomment when needed
+  // const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  // const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.2, 1, 0.2]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [activeCard, setActiveCard] = useState(0);
   
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const scaleProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);

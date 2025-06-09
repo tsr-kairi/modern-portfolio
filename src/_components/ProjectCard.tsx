@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, ArrowRight, Star, Code, Eye, GitBranch } from 'lucide-react';
+import { Github, ArrowRight, Star, Eye } from 'lucide-react';
 import { Project } from '../data/projectsData';
 
 interface ProjectCardProps {

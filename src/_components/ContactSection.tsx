@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useAnimation, AnimatePresence, useInView } from 'framer-motion';
-import { Mail, Phone, Linkedin, Github, Send, MapPin, CheckCircle, FileText, ChevronRight, ArrowRight } from 'lucide-react';
+import { motion, useAnimation, useInView } from 'framer-motion';
+import { Mail, Phone, Linkedin, Github, Send, MapPin, FileText, ChevronRight } from 'lucide-react';
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -141,11 +141,7 @@ const ContactForm = ({ onSubmit, isSending }: { onSubmit: (data: FormData) => vo
 
 
 const ContactSection = () => {
-  const [isHovered, setIsHovered] = useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+    const [isSending, setIsSending] = useState(false);
   const controls = useAnimation();
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
@@ -161,7 +157,7 @@ const ContactSection = () => {
     }
   });
   
-  const { handleSubmit, reset } = methods;
+  const { reset } = methods;
 
   useEffect(() => {
     if (isInView) {
@@ -249,17 +245,11 @@ const ContactSection = () => {
 
   const onSubmit = async (data: yup.InferType<typeof formSchema>) => {
     setIsSending(true);
-    setError(null);
     
     try {
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
       reset();
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setError(error instanceof Error ? error.message : 'Failed to send message');
     } finally {
       setIsSending(false);
     }
@@ -355,9 +345,7 @@ const ContactSection = () => {
                 rel="noopener noreferrer"
                 variants={item}
                 custom={index}
-                className={`group relative p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-${method.color.split(' ')[1].split('-')[1]}-500/30 transition-all duration-300 overflow-hidden`}
-                onMouseEnter={() => setIsHovered(method.id)}
-                onMouseLeave={() => setIsHovered(null)}
+                className={`group relative p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-purple-500/30 transition-all duration-300 overflow-hidden`}
               >
                 <div className="relative z-10">
                   <div className="flex items-center mb-3">
@@ -372,7 +360,6 @@ const ContactSection = () => {
                   className={`absolute -bottom-4 -right-4 w-16 h-16 rounded-full bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <ArrowRight className="absolute bottom-4 right-4 w-5 h-5 text-white opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300" />
               </motion.a>
             ))}
           </motion.div>
@@ -401,44 +388,9 @@ const ContactSection = () => {
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold text-white mb-6">Send Me a Message</h3>
 
-                <AnimatePresence mode="wait">
-                  {error && (
-                    <motion.div
-                      key="error"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6 text-center mb-6"
-                    >
-                      <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Error Sending Message</h4>
-                      <p className="text-red-700 dark:text-red-300">{error}</p>
-                    </motion.div>
-                  )}
-                  {success ? (
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-6 text-center"
-                    >
-                      <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
-                      </div>
-                      <h4 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">Message Sent!</h4>
-                      <p className="text-green-700 dark:text-green-300">Thank you for reaching out. I'll get back to you soon!</p>
-                    </motion.div>
-                  ) : (
-                    <FormProvider {...methods}>
-                      <ContactForm onSubmit={onSubmit} isSending={isSending} />
-                    </FormProvider>
-                  )}
-                </AnimatePresence>
+                <FormProvider {...methods}>
+                  <ContactForm onSubmit={onSubmit} isSending={isSending} />
+                </FormProvider>
               </div>
             </div>
           </motion.div>

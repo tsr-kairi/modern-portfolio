@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Filter } from 'lucide-react';
 import ProjectCard from './ProjectCard';
-import { projectsData, Project } from '../data/projectsData';
+import { projectsData } from '../data/projectsData';
 
 type ProjectCategory = 'all' | 'featured' | 'web' | 'mobile' | 'ai' | 'enterprise';
 

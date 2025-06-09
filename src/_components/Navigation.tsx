@@ -43,16 +43,15 @@ const Navigation = () => {
             whileTap={{ scale: 0.95 }}
             className="flex-shrink-0"
           >
-            <a 
-              href="#" 
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent"
-              onClick={(e) => {
-                e.preventDefault();
+            <button 
+              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent border-none bg-transparent p-0 cursor-pointer"
+              onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              aria-label="Scroll to top"
             >
               Ranjit.
-            </a>
+            </button>
           </motion.div>
 
           {/* Desktop Navigation */}
