@@ -2,7 +2,6 @@ import React from 'react';
 import { Github, Linkedin, Mail, ArrowRight, Code, Cpu, Layout, Users, Code2, Sparkles } from 'lucide-react';
 import Typewriter from 'typewriter-effect';
 
-// @ts-ignore
 import myImg from '../assets/my-img.jpeg';
 
 interface HeroSectionProps {

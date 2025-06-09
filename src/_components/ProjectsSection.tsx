@@ -66,9 +66,49 @@ const ProjectsSection = ({ isLoaded }: { isLoaded: boolean }) => {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.05,
+        when: "beforeChildren",
+        staggerDirection: 1
       },
     },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  };
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.6, 
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
   };
 
   const categories: { id: ProjectCategory; label: string; count: number }[] = [
@@ -83,21 +123,49 @@ const ProjectsSection = ({ isLoaded }: { isLoaded: boolean }) => {
     <section id="projects" className="relative z-10 py-24 px-4 sm:px-6 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          initial="hidden"
+          animate={isLoaded ? "visible" : "hidden"}
+          variants={containerVariants}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1 text-sm font-medium text-purple-400 bg-purple-900/30 rounded-full mb-4">
+          <motion.span 
+            className="inline-block px-4 py-1 text-sm font-medium text-purple-400 bg-purple-900/30 rounded-full mb-4"
+            variants={fadeInUp}
+          >
             PORTFOLIO SHOWCASE
-          </span>
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            My <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Projects</span>
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          </motion.span>
+          <motion.h2 
+            className="text-5xl md:text-6xl font-bold text-white mb-6"
+            variants={fadeInUp}
+          >
+            My{' '}
+            <motion.span 
+              className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+              variants={fadeInUp}
+            >
+              Projects
+            </motion.span>
+          </motion.h2>
+          <motion.div 
+            className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"
+            variants={{
+              hidden: { scaleX: 0 },
+              visible: { 
+                scaleX: 1,
+                transition: { 
+                  delay: 0.3, 
+                  duration: 0.8, 
+                  type: 'spring' 
+                } 
+              }
+            }}
+          />
+          <motion.p 
+            className="text-xl text-gray-400 max-w-3xl mx-auto mt-8"
+            variants={fadeInUp}
+          >
             A curated collection of my professional work, showcasing innovative solutions and technical expertise
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Search and Filter Bar */}
@@ -131,9 +199,11 @@ const ProjectsSection = ({ isLoaded }: { isLoaded: boolean }) => {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
             <div className="hidden md:flex items-center space-x-1 bg-gray-800/50 backdrop-blur-sm p-1 rounded-xl border border-gray-700/50">
               {categories.map(({ id, label, count }) => (
-                <button
+                <motion.button
                   key={id}
                   onClick={() => setActiveCategory(id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                   className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-all ${
                     activeCategory === id
                       ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white shadow-md shadow-purple-500/10'
@@ -144,7 +214,7 @@ const ProjectsSection = ({ isLoaded }: { isLoaded: boolean }) => {
                   <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-gray-700/50 text-gray-300">
                     {count}
                   </span>
-                </button>
+                </motion.button>
               ))}
             </div>
             
@@ -232,26 +302,28 @@ const ProjectsSection = ({ isLoaded }: { isLoaded: boolean }) => {
 
         {/* Projects Grid */}
         {filteredProjects.length > 0 ? (
-          <motion.div
+          <motion.div 
             variants={container}
             initial="hidden"
             animate={isLoaded ? "show" : "hidden"}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             <AnimatePresence>
               {filteredProjects.map((project, index) => (
                 <motion.div
-                  key={project.title}
+                  key={`${project.title}-${index}`}
+                  variants={item}
                   layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial="hidden"
+                  animate="show"
                   exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                  transition={{ duration: 0.4, type: 'spring', stiffness: 300, damping: 30 }}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  className="relative"
                 >
                   <ProjectCard 
                     project={project} 
-                    index={index} 
-                    isLoaded={true} // Always show animation when filtered
+                    index={index}
+                    isLoaded={isLoaded}
                   />
                 </motion.div>
               ))}

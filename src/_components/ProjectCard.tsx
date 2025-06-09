@@ -43,12 +43,36 @@ const ProjectCard = ({ project, index, isLoaded }: ProjectCardProps) => {
   const { primary, secondary } = getTechGradient(project.tech);
   const gradient = `bg-gradient-to-br ${primary} ${secondary}`;
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+    hover: {
+      y: -5,
+      transition: {
+        type: 'spring',
+        stiffness: 400,
+        damping: 15
+      }
+    },
+    tap: {
+      scale: 0.98
+    }
+  };
+
   return (
     <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      initial="hidden"
+      animate={isLoaded ? "visible" : "hidden"}
+      whileHover="hover"
+      whileTap="tap"
+      variants={cardVariants}
       className={`group relative h-full overflow-hidden rounded-2xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-500 ${
         isHovered ? 'shadow-2xl shadow-purple-500/10' : 'shadow-lg'
       } ${project.featured ? 'ring-1 ring-purple-500/50' : ''}`}
@@ -71,20 +95,39 @@ const ProjectCard = ({ project, index, isLoaded }: ProjectCardProps) => {
 
       {/* Project Image */}
       <div className="relative h-56 overflow-hidden">
-        <div className={`absolute inset-0 ${gradient} opacity-50 z-0`}></div>
-        <motion.img 
-          src={project.image} 
-          alt={project.title}
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            isHovered ? 'scale-105' : 'scale-100'
-          }`}
-          style={{
-            opacity: isImageLoaded ? 1 : 0,
-            transform: isImageLoaded ? 'scale(1)' : 'scale(1.1)',
-            transition: 'opacity 0.5s ease, transform 0.5s ease',
+        <motion.div 
+          className={`absolute inset-0 ${gradient} opacity-50 z-0`}
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: isHovered ? 0.7 : 0.5 }}
+          transition={{ duration: 0.4 }}
+        ></motion.div>
+        <motion.div 
+          className="relative w-full h-full overflow-hidden"
+          initial={false}
+          animate={{
+            scale: isHovered ? 1.05 : 1,
           }}
-          onLoad={() => setIsImageLoaded(true)}
-        />
+          transition={{
+            duration: 0.8,
+            ease: [0.16, 1, 0.3, 1]
+          }}
+        >
+          <motion.img 
+            src={project.image} 
+            alt={project.title}
+            className="w-full h-full object-cover"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{
+              opacity: isImageLoaded ? 1 : 0,
+              scale: isImageLoaded ? 1 : 1.1
+            }}
+            transition={{
+              opacity: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+              scale: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+            }}
+            onLoad={() => setIsImageLoaded(true)}
+          />
+        </motion.div>
         
         {/* Image Overlay */}
         <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 ${
@@ -131,35 +174,60 @@ const ProjectCard = ({ project, index, isLoaded }: ProjectCardProps) => {
         </div>
         
         {/* Description */}
-        <motion.p 
-          className="text-gray-300 mb-5 leading-relaxed transition-all duration-300 line-clamp-3"
+        <motion.div 
+          className="overflow-hidden"
+          initial={false}
           animate={{
-            WebkitLineClamp: isExpanded ? 'unset' : 3,
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
+            height: isExpanded ? 'auto' : '4.5rem',
+          }}
+          transition={{
+            duration: 0.4,
+            ease: [0.16, 1, 0.3, 1]
           }}
         >
+          <p className="text-gray-300 mb-5 leading-relaxed">
           {project.description}
-        </motion.p>
+          </p>
+        </motion.div>
         
         {/* Read More Button */}
-        <button 
+        <motion.button 
           onClick={(e) => {
             e.stopPropagation();
             setIsExpanded(!isExpanded);
           }}
-          className="text-sm text-purple-400 hover:text-white mb-4 flex items-center transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="text-sm text-purple-400 hover:text-white mb-4 flex items-center transition-colors group/button"
         >
           {isExpanded ? 'Show less' : 'Read more'}
           <motion.span
-            animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
-            className="ml-1"
+            className="ml-1.5 inline-flex items-center justify-center"
+            animate={{
+              rotate: isExpanded ? 180 : 0,
+              y: isHovered ? [0, 2, 0] : 0
+            }}
+            transition={{
+              rotate: { duration: 0.3 },
+              y: {
+                duration: 1.5,
+                repeat: isHovered ? Infinity : 0,
+                repeatType: 'reverse'
+              }
+            }}
           >
-            ▼
+            <motion.span
+              animate={{
+                y: isExpanded ? 1 : 0
+              }}
+              transition={{
+                duration: 0.3
+              }}
+            >
+              ▼
+            </motion.span>
           </motion.span>
-        </button>
+        </motion.button>
 
         {/* Impact Section (Collapsible) */}
         <AnimatePresence>

@@ -310,9 +310,19 @@ const ContactSection = () => {
           >
             Let's Work Together
           </motion.h2>
-          <motion.div
-            variants={item}
+          <motion.div 
             className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"
+            variants={{
+              hidden: { scaleX: 0 },
+              visible: { 
+                scaleX: 1,
+                transition: { 
+                  delay: 0.3, 
+                  duration: 0.8, 
+                  type: 'spring' 
+                } 
+              }
+            }}
           />
           <motion.p
             variants={item}

@@ -81,7 +81,7 @@ const stats = [
 ];
 
 const ModernExperienceSection = () => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.2 });
   const [activeCard, setActiveCard] = useState(0);
   
@@ -92,6 +92,43 @@ const ModernExperienceSection = () => {
   
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const scaleProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: (i: number) => ({
+      y: 0,
+      opacity: 1,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.6,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    }),
+  };
+  
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.6, 
+        ease: 'easeOut' 
+      }
+    }
+  };
 
   return (
     <section 
@@ -113,45 +150,78 @@ const ModernExperienceSection = () => {
         backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'1\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
       }} />
 
-      <div className="relative max-w-7xl mx-auto">
+      <motion.div 
+        className="relative max-w-7xl mx-auto"
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={containerVariants}
+      >
         {/* Header Section */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          variants={fadeInUp}
           className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-1 text-sm font-medium text-purple-400 bg-purple-900/30 rounded-full mb-4">Professional Journey</span>
+          <motion.div 
+          className="text-center mb-16"
+          variants={itemVariants}
+        >
+          <motion.span className="inline-block px-4 py-1 text-sm font-medium text-purple-400 bg-purple-900/30 rounded-full mb-4"
+            variants={fadeInUp}
+          >
+            Professional Journey
+          </motion.span>
           
-          <h2 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-purple-300">
+          <motion.h2 className="text-5xl md:text-7xl font-bold mb-6"
+            variants={fadeInUp}
+          >
+            <motion.span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-purple-300"
+              variants={fadeInUp}
+            >
               Experience
-            </span>
+            </motion.span>
             <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+            <motion.span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400"
+              variants={fadeInUp}
+            >
               That Delivers
-            </span>
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"/>
+            </motion.span>
+          </motion.h2>
+          <motion.div 
+            className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"
+            variants={{
+              hidden: { scaleX: 0 },
+              visible: { 
+                scaleX: 1,
+                transition: { 
+                  delay: 0.3, 
+                  duration: 0.8, 
+                  type: 'spring' 
+                } 
+              }
+            }}
+          />
           
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mt-8">
+          <motion.p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mt-8"
+            variants={fadeInUp}
+          >
             Transforming ideas into impactful solutions through strategic development 
             and innovative problem-solving
-          </p>
+          </motion.p>
+          </motion.div>
         </motion.div>
 
         {/* Experience Timeline */}
         <motion.div 
           style={{ scale: scaleProgress }}
           className="relative mb-24"
+          variants={containerVariants}
         >
           <div className="grid gap-8 lg:gap-12">
             {experienceData.map((exp, index) => (
               <motion.div
                 key={exp.id}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
+                variants={itemVariants}
+                custom={index}
                 onHoverStart={() => setActiveCard(index)}
                 className="relative"
               >
@@ -212,10 +282,9 @@ const ModernExperienceSection = () => {
                           {exp.achievements.map((achievement, i) => (
                             <motion.div
                               key={i}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={isInView ? { opacity: 1, y: 0 } : {}}
+                              variants={itemVariants}
+                              custom={i}
                               transition={{ 
-                                delay: index * 0.15 + i * 0.08,
                                 type: 'spring',
                                 stiffness: 100
                               }}
@@ -237,10 +306,9 @@ const ModernExperienceSection = () => {
                           {exp.skills.map((skill, i) => (
                             <motion.span
                               key={i}
-                              initial={{ opacity: 0, y: 5 }}
-                              animate={isInView ? { opacity: 1, y: 0 } : {}}
+                              variants={itemVariants}
+                              custom={i}
                               transition={{ 
-                                delay: index * 0.15 + i * 0.05,
                                 type: 'spring',
                                 stiffness: 100
                               }}
@@ -261,9 +329,8 @@ const ModernExperienceSection = () => {
 
         {/* Stats Section */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          variants={fadeInUp}
+          transition={{ delay: 0.3 }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {stats.map((stat, index) => (
@@ -287,9 +354,8 @@ const ModernExperienceSection = () => {
 
         {/* Call to Action */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          variants={fadeInUp}
+          transition={{ delay: 0.4 }}
           className="text-center mt-20"
         >
           <motion.button
@@ -306,7 +372,7 @@ const ModernExperienceSection = () => {
             </motion.div>
           </motion.button>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };
